@@ -14,7 +14,8 @@
     "anwarulislam",
     "yusifaliyevpro",
     "xilopaint",
-    "chrismessina"
+    "chrismessina",
+    "showbiz0"
   ],
   "categories": [
     "Applications",
@@ -55,6 +56,21 @@
           "url"
         ]
       },
+      "output": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "title",
+          "duration"
+        ]
+      },
       "confirmation": false
     },
     {
@@ -76,6 +92,9 @@
         "required": [
           "url"
         ]
+      },
+      "output": {
+        "type": "string"
       },
       "confirmation": false
     }
@@ -195,6 +214,15 @@
           "value": "vivaldi"
         }
       ]
+    },
+    {
+      "name": "fastRemux",
+      "title": "Fast Remux",
+      "description": "Package video and audio streams directly into the target container without re-encoding. Much faster and preserves lossless quality.",
+      "type": "checkbox",
+      "label": "Remux streams without re-encoding (faster, recommended)",
+      "default": true,
+      "required": false
     }
   ],
   "ai": {

@@ -1,26 +1,20 @@
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 export PATH="$HOME/.config/emacs/bin:$PATH"
-# Path to your Oh My Zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time Oh My Zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="powerlevel10k/powerlevel10k"
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
-plugins=(git docker docker-compose zsh-autosuggestions zsh-syntax-highlighting)
-source $ZSH/oh-my-zsh.sh
+# Starship prompt (replaces Oh My Zsh/Powerlevel10k).
+eval "$(starship init zsh)"
+
+# Keep the existing Oh My Zsh plugins without loading Oh My Zsh itself.
+if [[ -f "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
+  source "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
 
 export EDITOR='nvim'
 export VISUAL='nvim'
 
 alias cat='bat '
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 
 alias l='eza --header --color=always --long --git --no-user --no-permissions --icons=always --tree -L 1 '
 # Dirs
@@ -30,9 +24,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias cl='clear'
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+alias ta="tmux a" 
 eval "$(zoxide init --cmd cd zsh)"
 
 
@@ -68,6 +60,10 @@ if [[ -f "$HOME/fzf-git.sh/fzf-git.sh" ]]; then
   source "$HOME/fzf-git.sh/fzf-git.sh"
 fi
 
+if [[ -f "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+  source "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
+
 show_file_or_dir_preview="if [ -d {} ]; then eza --header --color=always --long --git --no-user --no-permissions --icons=always --tree -L 1  {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
 
 export FZF_CTRL_T_OPTS="--preview '$show_file_or_dir_preview'"
@@ -88,13 +84,3 @@ _fzf_comprun() {
   esac
 }
 
-# Torrent Search Engine
-alias ts="python3 ~/Desktop/code/files/search.py"
-alias ts-start="cd ~/Desktop/code/files && nohup ./target/release/torrent-search > server.log 2>&1 & echo \$! > server.pid && echo Server started"
-alias ts-stop="kill \$(cat ~/Desktop/code/files/server.pid) && echo Server stopped"
-alias ts-log="tail -f ~/Desktop/code/files/server.log"
-alias ts-status="curl -s http://localhost:3000/health | python3 -m json.tool"
-
-
-# Tortube
-alias tortube='/Users/yashvitfuloria/Desktop/code/torrent-stream-engine/scripts/tortube'
