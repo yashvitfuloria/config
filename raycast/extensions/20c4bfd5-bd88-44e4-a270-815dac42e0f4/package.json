@@ -12,7 +12,8 @@
     "litomore",
     "yusifaliyevpro",
     "shivraj-roy",
-    "alexi.build"
+    "alexi.build",
+    "nawal"
   ],
   "platforms": [
     "macOS",
@@ -136,8 +137,19 @@
     "lint": "ray lint",
     "publish": "npx @raycast/api@latest publish"
   },
+  "preferences": [
+    {
+      "name": "lockMouse",
+      "title": "Lock Mouse Clicks",
+      "description": "Also block clicks and dragging while scrolling stays available. Unlock with Touch ID or hold both Command keys for 8 seconds. Requires Touch ID on macOS; ignored on Windows.",
+      "type": "checkbox",
+      "label": "Also lock mouse clicks (macOS, requires Touch ID)",
+      "default": false,
+      "required": false
+    }
+  ],
   "ai": {
-    "instructions": "Use the lock-keyboard tool when the user asks to lock the keyboard for cleaning.\nIf no duration is given, use the 30-second default. Use 0 seconds only when the user asks for forever.\nConvert requested durations to whole seconds before calling the tool.\nFor questions about how to unlock the keyboard, answer without locking it. Press Ctrl+U to unlock at any time.\n",
+    "instructions": "Use the lock-keyboard tool when the user asks to lock the keyboard for cleaning.\nIf no duration is given, use the 30-second default. Use 0 seconds only when the user asks for forever.\nConvert requested durations to whole seconds before calling the tool.\nFor questions about unlocking, answer without locking. Normally Ctrl+U unlocks immediately. With Lock Mouse Clicks enabled on macOS, Ctrl+U or three Command taps opens Touch ID; holding both Command keys for eight seconds forces release. Follow the tool confirmation for the active preference.\n",
     "evals": [
       {
         "input": "@clean-keyboard Lock my keyboard for 30 seconds so I can clean it.",
