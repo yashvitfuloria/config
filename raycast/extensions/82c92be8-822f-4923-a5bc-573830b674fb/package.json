@@ -70,7 +70,7 @@
       "preferences": [
         {
           "name": "hidenWhenDecaffeinated",
-          "description": "Hide the icon when decaffeinated",
+          "description": "Hide when no caffeination is detected. On macOS, external caffeinate processes also keep the icon visible",
           "type": "checkbox",
           "required": false,
           "default": false,
@@ -91,7 +91,7 @@
       "title": "Caffeinate for ...",
       "subtitle": "Coffee",
       "description": "Prevent your computer from sleeping for a certain time",
-      "mode": "view",
+      "mode": "no-view",
       "arguments": [
         {
           "name": "hours",
@@ -185,7 +185,7 @@
       "name": "check-caffeination-status",
       "title": "Check Caffeination Status",
       "description": "Check if your computer is currently caffeinated or not",
-      "instructions": "Checks if your computer is currently prevented from sleeping",
+      "instructions": "Reports Coffee's session and any detected external caffeinate processes.",
       "output": {
         "type": "string"
       },
@@ -194,8 +194,8 @@
     {
       "name": "decaffeinate",
       "title": "Decaffeinate",
-      "description": "Turn off your computer's sleep prevention",
-      "instructions": "Turns off caffeination, allowing your computer to go to sleep normally.\nIf a schedule is running, behavior depends on \"Decaffeinate pauses running schedules\" preference.",
+      "description": "Stop Coffee-managed sleep prevention; external caffeination remains active",
+      "instructions": "Stops Coffee-owned caffeination. External sleep prevention remains untouched.\nIf a schedule is running, behavior depends on \"Decaffeinate pauses running schedules\" preference.",
       "output": {
         "type": "string"
       },
@@ -456,6 +456,8 @@
     "typescript": "^6.0.3"
   },
   "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "check": "npm test && tsc --noEmit && eslint src tests",
     "build": "ray build -e dist",
     "dev": "ray develop",
     "fix-lint": "ray lint --fix",
@@ -464,7 +466,7 @@
     "publish": "npx @raycast/api@latest publish"
   },
   "ai": {
-    "instructions": "Help users manage their computer's sleep prevention (caffeination).\n\nCheck the current status with check-caffeination-status before starting or stopping caffeination. Status-only questions need no other tool.\n\nTool selection guide:\n- User wants indefinite caffeination → use caffeinate\n- User specifies a duration → use caffeinate-for\n- User specifies an end date or time → use caffeinate-until with an ISO 8601 date and time, including the local UTC offset when known\n- User wants to caffeinate while an app runs → use caffeinate-while-app-is-running\n- User wants to create or replace recurring schedules → use schedule-caffeination\n- User wants to see recurring schedules → use list-caffeination-schedules\n- User wants to pause, resume, or delete a recurring schedule → call list-caffeination-schedules first, then use manage-caffeination-schedule with the matching day\n- User wants to stop caffeination → use decaffeinate. Interrupting a running schedule pauses it until resumed; mention that when it happens\n\nWhen confirming actions, mention the specific duration, end time, application, or schedule as applicable.\n",
+    "instructions": "Help users manage Coffee's sleep prevention (caffeination).\nDistinguish Coffee-managed sessions from external caffeination. Starting or stopping Coffee leaves external processes untouched.\nIf external activity remains after Coffee stops, say so. Never claim all sleep prevention is disabled from Coffee's status alone.\nExternal sleep prevention is not monitored on Windows.\n\nCheck the current status with check-caffeination-status before starting or stopping caffeination. Status-only questions need no other tool.\n\nTool selection guide:\n- User wants indefinite caffeination → use caffeinate\n- User specifies a duration → use caffeinate-for\n- User specifies an end date or time → use caffeinate-until with an ISO 8601 date and time, including the local UTC offset when known\n- User wants to caffeinate while an app runs → use caffeinate-while-app-is-running\n- User wants to create or replace recurring schedules → use schedule-caffeination\n- User wants to see recurring schedules → use list-caffeination-schedules\n- User wants to pause, resume, or delete a recurring schedule → call list-caffeination-schedules first, then use manage-caffeination-schedule with the matching day\n- User wants to stop caffeination → use decaffeinate. Interrupting a running schedule pauses it until resumed; mention that when it happens\n\nWhen confirming actions, mention the specific duration, end time, application, or schedule as applicable.\n",
     "evals": [
       {
         "input": "@coffee keep my computer awake for 2 hours",
@@ -542,7 +544,7 @@
             "callsTool": "decaffeinate"
           },
           {
-            "meetsCriteria": "Confirms that sleep prevention has been disabled"
+            "meetsCriteria": "Confirms Coffee caffeination stopped, mentioning external activity if it remains"
           }
         ]
       },
@@ -559,7 +561,7 @@
             "callsTool": "check-caffeination-status"
           },
           {
-            "meetsCriteria": "Clearly states whether the computer is currently caffeinated or not"
+            "meetsCriteria": "Clearly distinguishes Coffee activity from detected external caffeination"
           }
         ]
       },
@@ -714,6 +716,38 @@
           },
           {
             "meetsCriteria": "Confirms that the Monday schedule is paused"
+          }
+        ]
+      },
+      {
+        "input": "@coffee is Coffee keeping my computer awake, or is it another app?",
+        "mocks": {
+          "check-caffeination-status": "Coffee is inactive; external caffeination is active (1 process)"
+        },
+        "expected": [
+          {
+            "callsTool": "check-caffeination-status"
+          },
+          {
+            "meetsCriteria": "Explains that Coffee is inactive and another process is providing caffeination"
+          }
+        ]
+      },
+      {
+        "input": "@coffee stop Coffee's caffeination",
+        "mocks": {
+          "check-caffeination-status": "Coffee is currently keeping your Mac awake; external caffeination is also active (1 process)",
+          "decaffeinate": "Coffee caffeination stopped; external caffeination remains active"
+        },
+        "expected": [
+          {
+            "callsTool": "check-caffeination-status"
+          },
+          {
+            "callsTool": "decaffeinate"
+          },
+          {
+            "meetsCriteria": "Confirms Coffee stopped and explicitly says external caffeination remains active"
           }
         ]
       }
