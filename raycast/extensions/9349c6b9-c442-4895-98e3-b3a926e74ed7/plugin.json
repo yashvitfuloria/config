@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "brew",
-  "description": "Search, install and manage Homebrew formulae and casks",
+  "description": "Search, install, upgrade and uninstall Homebrew formulae and casks on your Mac, manage services and taps, run brew doctor and check vulnerabilities.",
   "author": {
     "name": "nhojb"
   },

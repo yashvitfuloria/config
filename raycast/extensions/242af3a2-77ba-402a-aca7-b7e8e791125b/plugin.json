@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "keyboard-brightness",
-  "description": "Easily Control Keyboard Brightness on your Apple Silicon MacBook",
+  "description": "Control MacBook keyboard backlight brightness: toggle, increase, decrease or set a percentage, with menu bar controls.",
   "author": {
     "name": "huzef44"
   },

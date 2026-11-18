@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "screenocr",
-  "description": "Extract text from screen captures and clipboard images locally via OCR",
+  "description": "Extract text from a screen area, the whole screen or a clipboard image with on-device OCR, and detect QR codes and barcodes on macOS.",
   "author": {
     "name": "huzef44"
   },
